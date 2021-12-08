@@ -28,7 +28,7 @@ app.get("/tweets/:id", (req, res) => {
 app.post("/tweets", (req, res) => {
   const { text, name, username, url } = req.body;
   const newTweet: Tweet = {
-    id: String(tweets.length + 1),
+    id: String(Number(tweets[tweets.length - 1].id) + 1),
     createdAt: new Date(),
     name,
     text,
@@ -48,6 +48,14 @@ app.put("/tweets/:id", (req, res) => {
     findTweet.text = text;
   }
   res.json(findTweet);
+});
+
+// Delete tweet
+app.delete("/tweets/:id", (req, res) => {
+  const { id } = req.params;
+  const index = tweets.findIndex((tweet) => tweet.id === id);
+  tweets.splice(index, 1);
+  res.json(true);
 });
 
 app.listen(port, () => {
