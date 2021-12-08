@@ -11,10 +11,17 @@ app.use(express.urlencoded({ extended: true }));
 app.get("/tweets", (req, res) => {
   const { username } = req.query;
   if (!username) {
-    res.json(tweets);
+    return res.json(tweets);
   }
   const findByName = tweets.filter((tweet) => tweet.name === username);
-  res.json(findByName);
+  return res.json(findByName);
+});
+
+// byid
+app.get("/tweets/:id", (req, res) => {
+  const { id } = req.params;
+  const findById = tweets.find((tweet) => tweet.id === id);
+  return res.json(findById);
 });
 
 app.listen(port, () => {
