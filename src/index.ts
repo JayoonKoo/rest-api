@@ -7,8 +7,14 @@ const port = 8080;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// get Tweets, findByUsername
 app.get("/tweets", (req, res) => {
-  res.json(tweets);
+  const { username } = req.query;
+  if (!username) {
+    res.json(tweets);
+  }
+  const findByName = tweets.filter((tweet) => tweet.name === username);
+  res.json(findByName);
 });
 
 app.listen(port, () => {

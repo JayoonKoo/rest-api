@@ -11,8 +11,22 @@ export const tweets: Tweet[] = [
   {
     id: "1",
     text: "안녕하세요",
-    createdAt: new Date("2021-12-08T04:21:00.914Z"),
+    createdAt: new Date("2021-12-03T04:21:00.914Z"),
     name: "Koo",
     username: "messi",
+  },
+  {
+    id: "2",
+    text: "누군데?",
+    createdAt: new Date("2021-12-04T04:21:00.914Z"),
+    name: "bob",
+    username: "bobtista",
+  },
+  {
+    id: "3",
+    text: "아 저번에 맜났었나?",
+    createdAt: new Date("2021-12-04T04:21:00.914Z"),
+    name: "bob",
+    username: "bobtista",
   },
 ];
