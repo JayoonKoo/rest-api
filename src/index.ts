@@ -39,6 +39,17 @@ app.post("/tweets", (req, res) => {
   res.json(newTweet);
 });
 
+// update tweet
+app.put("/tweets/:id", (req, res) => {
+  const { id } = req.params;
+  const { text } = req.body;
+  let findTweet = tweets.find((tweet) => tweet.id === id);
+  if (findTweet) {
+    findTweet.text = text;
+  }
+  res.json(findTweet);
+});
+
 app.listen(port, () => {
   console.log(`server openned ${port}...`);
 });
