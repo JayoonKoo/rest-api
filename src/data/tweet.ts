@@ -31,15 +31,15 @@ export const tweets: Tweet[] = [
   },
 ];
 
-export function getAll() {
+export async function getAll() {
   return tweets;
 }
 
-export function getAllByUsername(username: string) {
+export async function getAllByUsername(username: string) {
   return tweets.filter((tweet) => tweet.name === username);
 }
 
-export function getById(id: string) {
+export async function getById(id: string) {
   return tweets.find((tweet) => tweet.id === id);
 }
 
@@ -49,7 +49,7 @@ export type CreateType = {
   username: string;
   url?: string;
 };
-export function create({ name, text, username, url }: CreateType) {
+export async function create({ name, text, username, url }: CreateType) {
   const newTweet: Tweet = {
     id: Date.now().toString(),
     createdAt: new Date(),
@@ -66,7 +66,7 @@ export type UpdateReq = {
   text: string;
   id: string;
 };
-export function update({ text, id }: UpdateReq) {
+export async function update({ text, id }: UpdateReq) {
   let findTweet = tweets.find((tweet) => tweet.id === id);
   if (findTweet) {
     findTweet.text = text;
@@ -74,7 +74,7 @@ export function update({ text, id }: UpdateReq) {
   return findTweet;
 }
 
-export function remove(id: string) {
+export async function remove(id: string) {
   const index = tweets.findIndex((tweet) => tweet.id === id);
   tweets.splice(index, 1);
 }
