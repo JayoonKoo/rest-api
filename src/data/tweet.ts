@@ -30,3 +30,51 @@ export const tweets: Tweet[] = [
     username: "bobtista",
   },
 ];
+
+export async function getAll() {
+  return tweets;
+}
+
+export async function getAllByUsername(username: string) {
+  return tweets.filter((tweet) => tweet.name === username);
+}
+
+export async function getById(id: string) {
+  return tweets.find((tweet) => tweet.id === id);
+}
+
+export type CreateType = {
+  text: string;
+  name: string;
+  username: string;
+  url?: string;
+};
+export async function create({ name, text, username, url }: CreateType) {
+  const newTweet: Tweet = {
+    id: Date.now().toString(),
+    createdAt: new Date(),
+    name,
+    text,
+    username,
+    url: url,
+  };
+  tweets.unshift(newTweet);
+  return newTweet;
+}
+
+export type UpdateReq = {
+  text: string;
+  id: string;
+};
+export async function update({ text, id }: UpdateReq) {
+  let findTweet = tweets.find((tweet) => tweet.id === id);
+  if (findTweet) {
+    findTweet.text = text;
+  }
+  return findTweet;
+}
+
+export async function remove(id: string) {
+  const index = tweets.findIndex((tweet) => tweet.id === id);
+  tweets.splice(index, 1);
+}

@@ -1,68 +1,62 @@
 import { Tweet, tweets } from "../data/tweet";
+import * as tweetRepository from "../data/tweet";
+import { RequestHandler } from "express";
 
-export const getTweet = (username?: string) => {
-  if (!username) {
-    return tweets;
-  }
-  return tweets.filter((tweet) => tweet.name === username);
+type GetAllQuery = {
+  username?: string;
 };
-
-export const getById = (id: string) => {
-  const findById = tweets.find((tweet) => tweet.id === id);
-  if (findById) {
-    return {
-      success: true,
-      findById,
-    };
-  } else {
-    return {
-      success: false,
-      message: `Tweet id(${id}) not found`,
-    };
-  }
-};
-
-type CreateType = {
-  text: string;
-  name: string;
-  username: string;
-  url?: string;
-};
-export const createTweet = (createReq: CreateType) => {
-  const { name, text, username, url } = createReq;
-  const newTweet: Tweet = {
-    id: Date.now().toString(),
-    createdAt: new Date(),
-    name,
-    text,
-    username,
-    url: url,
-  };
-  tweets.unshift(newTweet);
-  return newTweet;
-};
-
-export const deleteTweet = (id: string) => {
-  const index = tweets.findIndex((tweet) => tweet.id === id);
-  tweets.splice(index, 1);
-};
-
-type UpdateReq = {
-  text: string;
+type GetParams = {
   id: string;
 };
-export const updateTweet = ({ id, text }: UpdateReq) => {
-  let findTweet = tweets.find((tweet) => tweet.id === id);
-  if (findTweet) {
-    findTweet.text = text;
-    return {
-      success: true,
-      updateTweet: findTweet,
-    };
+export const getTweets: RequestHandler<{}, {}, {}, GetAllQuery> = async (
+  req,
+  res
+) => {
+  const { username } = req.query;
+  const data = await (username
+    ? tweetRepository.getAllByUsername(username)
+    : tweetRepository.getAll());
+  res.status(200).json(data);
+};
+
+export const getTweet: RequestHandler<GetParams> = async (req, res, next) => {
+  const { id } = req.params;
+  const tweet = await tweetRepository.getById(id);
+  if (tweet) {
+    res.status(200).json(tweet);
   } else {
-    return {
-      success: false,
-      message: `Tweet id(${id}) not found`,
-    };
+    res.status(404).json({ message: `Tweet id(${id}) not found` });
   }
+};
+
+export const createTweet: RequestHandler<{}, {}, tweetRepository.CreateType> =
+  async (req, res, next) => {
+    const reqBody = req.body;
+    const tweet = await tweetRepository.create(reqBody);
+    res.status(201).json(tweet);
+  };
+
+export const updateTweet: RequestHandler<
+  GetParams,
+  {},
+  tweetRepository.UpdateReq
+> = async (req, res, next) => {
+  const { id } = req.params;
+  const { text } = req.body;
+  const tweet = await tweetRepository.update({ id, text });
+  if (tweet) {
+    res.status(200).json(tweet);
+  } else {
+    res.status(404).json({ message: `Tweet id(${id}) not found` });
+  }
+};
+
+export const deleteTweet: RequestHandler<GetParams> = async (
+  req,
+  res,
+  next
+) => {
+  const { id } = req.params;
+  await tweetRepository.remove(id);
+  res.sendStatus(204);
 };
