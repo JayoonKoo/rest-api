@@ -1,16 +1,14 @@
-import express from "express";
+import express, { Request } from "express";
 import "express-async-errors";
-import { Tweet, tweets } from "../mock/tweet";
+import { Tweet, tweets } from "../data/tweet";
+import { getTweet } from "../controller/tweetsController";
 
 const router = express.Router();
 // get Tweets, findByUsername
-router.get("/", (req, res) => {
+router.get("/", (req: Request<{}, {}, {}, Tweet>, res) => {
   const { username } = req.query;
-  if (!username) {
-    return res.json(tweets);
-  }
-  const findByName = tweets.filter((tweet) => tweet.name === username);
-  return res.json(findByName);
+  const tweet = getTweet(username);
+  return res.json(tweet);
 });
 
 // byid
