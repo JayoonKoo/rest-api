@@ -1,4 +1,3 @@
-import { Tweet, tweets } from "../data/tweet";
 import * as tweetRepository from "../data/tweet";
 import { RequestHandler } from "express";
 
